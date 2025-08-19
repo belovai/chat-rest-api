@@ -1,0 +1,56 @@
+services:
+  app:
+    container_name: chat-app
+    build:
+      context: ./docker/app
+      args:
+        UID: ${APP_UID:-33}
+        GID: ${APP_GID:-33}
+    volumes:
+      - .:/var/www
+    networks:
+      - chat
+
+  nginx:
+    container_name: chat-nginx
+    image: nginx:stable
+    volumes:
+      - ./public:/var/www/public
+      - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8080:80"
+    depends_on:
+      - app
+    networks:
+      - chat
+
+  redis:
+    container_name: chat-redis
+    image: redis:alpine
+    volumes:
+      - chat-redis:/data
+    networks:
+      - chat
+
+  mysql:
+    container_name: chat-mysql
+    image: mysql:lts
+    ports:
+      - ${FORWARD_MYSQL_PORT:-3306}:3306
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-chat}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-}
+    volumes:
+      - chat-mysql:/var/lib/mysql
+    networks:
+      - chat
+
+volumes:
+  chat-mysql:
+    driver: local
+  chat-redis:
+    driver: local
+
+networks:
+  chat:
+    driver: bridge
