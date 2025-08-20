@@ -57,8 +57,7 @@ class RegisterTest extends TestCase
     }
 
     /**
-     * @param array<string, string> $passwords
-     * @return void
+     * @param  array<string, string>  $passwords
      */
     #[Test]
     #[DataProvider('invalidPasswordProvider')]
