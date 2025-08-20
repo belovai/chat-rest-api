@@ -45,6 +45,14 @@ services:
     networks:
       - chat
 
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: chat-mailpit
+    ports:
+      - "8025:8025"
+    networks:
+      - chat
+
 volumes:
   chat-mysql:
     driver: local
