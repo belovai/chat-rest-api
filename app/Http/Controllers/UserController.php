@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\UserFilters;
 use App\Http\Requests\UserFilterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Support\Filters\UserFilters;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
