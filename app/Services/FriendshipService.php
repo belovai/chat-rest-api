@@ -10,6 +10,7 @@ use App\Exceptions\FriendRequestExistsException;
 use App\Exceptions\NotRequesterException;
 use App\Models\Friendship;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class FriendshipService
@@ -74,6 +75,26 @@ class FriendshipService
         $this->authorizeActorInPair($actor, $friendship);
 
         $friendship->delete();
+    }
+
+    public function block(User $actor, Friendship $friendship): Friendship
+    {
+        $this->authorizeActorInPair($actor, $friendship);
+
+        $friendship->update([
+            'status' => FriendshipStatusEnum::Blocked,
+            'blocked_by' => $actor->id,
+        ]);
+
+        return $friendship->refresh();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Friendship>
+     */
+    public function friendships(User $actor): Builder
+    {
+        return Friendship::query()->forUser($actor->id);
     }
 
     /**

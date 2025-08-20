@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 class UserFilters
 {
     /**
-     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\User> $query
-     * @param array<string, string> $input
+     * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\User>  $query
+     * @param  array<string, string>  $input
      * @return \Illuminate\Database\Eloquent\Builder<\App\Models\User>
      */
     public static function apply(Builder $query, array $input): Builder

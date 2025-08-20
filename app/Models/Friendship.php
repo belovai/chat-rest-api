@@ -22,7 +22,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read \App\Models\User $requestedBy
  * @property-read \App\Models\User $userBig
  * @property-read \App\Models\User $userSmall
+ *
  * @method static \Database\Factories\FriendshipFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Friendship forUser(int $userId)
  * @method static Builder<static>|Friendship newModelQuery()
  * @method static Builder<static>|Friendship newQuery()
  * @method static Builder<static>|Friendship pair(int $userIdSmall, int $userIdBig)
@@ -36,6 +38,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder<static>|Friendship whereUpdatedAt($value)
  * @method static Builder<static>|Friendship whereUserIdBig($value)
  * @method static Builder<static>|Friendship whereUserIdSmall($value)
+ *
  * @mixin \Eloquent
  */
 class Friendship extends Model
@@ -49,6 +52,7 @@ class Friendship extends Model
         'status',
         'requested_by',
         'accepted_at',
+        'blocked_by',
     ];
 
     #[\Override]
@@ -99,5 +103,14 @@ class Friendship extends Model
     public function scopePair(Builder $builder, int $userIdSmall, int $userIdBig): Builder
     {
         return $builder->where('user_id_small', $userIdSmall)->where('user_id_big', $userIdBig);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder<static>  $builder
+     * @return \Illuminate\Database\Eloquent\Builder<static>
+     */
+    public function scopeForUser(Builder $builder, int $userId): Builder
+    {
+        return $builder->where(fn (Builder $query) => $query->where('user_id_small', $userId)->orWhere('user_id_big', $userId));
     }
 }

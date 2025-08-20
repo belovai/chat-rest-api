@@ -16,9 +16,11 @@ class FriendshipController extends Controller
         //
     }
 
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        //
+        $friendships = $this->service->friendships($request->user())->paginate();
+
+        return response()->json(FriendshipResource::collection($friendships));
     }
 
     /**
@@ -31,7 +33,7 @@ class FriendshipController extends Controller
         return response()->json(new FriendshipResource($friendship), 201);
     }
 
-    public function accept(Request $request, Friendship $friendship)
+    public function accept(Request $request, Friendship $friendship): JsonResponse
     {
         $friendship = $this->service->accept($request->user(), $friendship);
 
@@ -45,8 +47,10 @@ class FriendshipController extends Controller
         return response()->json(status: 204);
     }
 
-    public function block()
+    public function block(Request $request, Friendship $friendship): JsonResponse
     {
-        //
+        $friendship = $this->service->block($request->user(), $friendship);
+
+        return response()->json(new FriendshipResource($friendship));
     }
 }

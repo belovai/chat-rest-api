@@ -35,8 +35,6 @@ class FriendshipFactory extends Factory
     }
 
     /**
-     * @param int $x
-     * @param int $y
      * @return array{int, int}
      */
     private function normalize(int $x, int $y): array
@@ -52,12 +50,11 @@ class FriendshipFactory extends Factory
         ]);
     }
 
-    public function blocked(int $blockedBy = null): static
+    public function blocked(?int $blockedBy = null): static
     {
         return $this->state(fn (array $attributes) => [
             'status' => FriendshipStatusEnum::Blocked,
             'blocked_by' => $blockedBy ?? $attributes['requested_by'],
         ]);
     }
-
 }

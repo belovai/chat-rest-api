@@ -143,4 +143,18 @@ class FriendshipTest extends TestCase
 
         $response->assertStatus(204);
     }
+
+    #[Test]
+    public function user_can_block_friendship(): void
+    {
+        $friendship = Friendship::factory()->accepted()->create();
+
+        Sanctum::actingAs($friendship->requestedBy);
+        $response = $this->patchJson(route(
+            'friendship.block',
+            ['friendship' => $friendship->id]
+        ));
+
+        $response->assertStatus(200);
+    }
 }

@@ -68,4 +68,16 @@ class FriendshipServiceTest extends TestCase
             'user_id_big' => max($userA->id, $userB->id),
         ]);
     }
+
+    #[Test]
+    public function user_can_block_friendship(): void
+    {
+        $userA = User::factory()->create();
+        $userB = User::factory()->create();
+
+        $friendship = $this->service->request($userA, $userB);
+        $this->service->block($userA, $friendship);
+
+        $this->assertEquals(FriendshipStatusEnum::Blocked, $friendship->fresh()->status);
+    }
 }
