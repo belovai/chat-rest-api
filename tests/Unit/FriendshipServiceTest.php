@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Enums\FriendshipStatusEnum;
 use App\Models\User;
@@ -15,6 +15,7 @@ class FriendshipServiceTest extends TestCase
 
     private FriendshipService $service;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
