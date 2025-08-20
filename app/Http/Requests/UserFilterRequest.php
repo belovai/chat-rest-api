@@ -17,7 +17,6 @@ class UserFilterRequest extends FormRequest
         return [
             'name' => ['string', 'max:255'],
             'email' => ['string', 'max:255'],
-            'per_page' => ['integer', 'min:1'],
         ];
     }
 }
