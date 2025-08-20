@@ -43,7 +43,7 @@ class FriendshipServiceTest extends TestCase
     }
 
     #[Test]
-    public function test_user_can_accept_friend_request(): void
+    public function user_can_accept_friend_request(): void
     {
         $userA = User::factory()->create();
         $userB = User::factory()->create();
@@ -52,5 +52,20 @@ class FriendshipServiceTest extends TestCase
         $this->service->accept($userB, $friendship);
 
         $this->assertEquals(FriendshipStatusEnum::Accepted, $friendship->fresh()->status);
+    }
+
+    #[Test]
+    public function user_can_delete_friendship(): void
+    {
+        $userA = User::factory()->create();
+        $userB = User::factory()->create();
+
+        $friendship = $this->service->request($userA, $userB);
+        $this->service->destroy($userA, $friendship);
+
+        $this->assertDatabaseMissing('friendships', [
+            'user_id_small' => min($userA->id, $userB->id),
+            'user_id_big' => max($userA->id, $userB->id),
+        ]);
     }
 }

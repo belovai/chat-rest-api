@@ -22,11 +22,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read \App\Models\User $requestedBy
  * @property-read \App\Models\User $userBig
  * @property-read \App\Models\User $userSmall
- *
- * @method static Builder<static>|Friendship pair(int $a, int $b)
  * @method static \Database\Factories\FriendshipFactory factory($count = null, $state = [])
  * @method static Builder<static>|Friendship newModelQuery()
  * @method static Builder<static>|Friendship newQuery()
+ * @method static Builder<static>|Friendship pair(int $userIdSmall, int $userIdBig)
  * @method static Builder<static>|Friendship query()
  * @method static Builder<static>|Friendship whereAcceptedAt($value)
  * @method static Builder<static>|Friendship whereBlockedBy($value)
@@ -37,7 +36,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder<static>|Friendship whereUpdatedAt($value)
  * @method static Builder<static>|Friendship whereUserIdBig($value)
  * @method static Builder<static>|Friendship whereUserIdSmall($value)
- *
  * @mixin \Eloquent
  */
 class Friendship extends Model

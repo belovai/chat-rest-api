@@ -69,6 +69,13 @@ class FriendshipService
         return $friendship->refresh();
     }
 
+    public function destroy(User $actor, Friendship $friendship): void
+    {
+        $this->authorizeActorInPair($actor, $friendship);
+
+        $friendship->delete();
+    }
+
     /**
      * @return array{int, int}
      */

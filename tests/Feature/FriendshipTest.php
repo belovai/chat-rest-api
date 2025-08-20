@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\FriendshipStatusEnum;
+use App\Models\Friendship;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -81,27 +82,65 @@ class FriendshipTest extends TestCase
     #[Test]
     public function user_can_accept_friend_request(): void
     {
-        $sender = User::factory()->create();
-        $recipient = User::factory()->create();
-        Sanctum::actingAs($sender);
-
-        $response = $this->postJson(route('friendship.store', ['user' => $recipient->id]));
+        $friendship = Friendship::factory()->create();
+        $recipient = $friendship->requested_by == $friendship->user_id_small ? $friendship->userBig : $friendship->userSmall;
 
         Sanctum::actingAs($recipient);
         $response = $this->patchJson(
             route(
                 'friendship.accept',
-                ['friendship' => $response->json('id')]
+                ['friendship' => $friendship->id]
             )
         );
 
         $response->assertStatus(200);
 
         $this->assertDatabaseHas('friendships', [
-            'user_id_small' => min($sender->id, $recipient->id),
-            'user_id_big' => max($sender->id, $recipient->id),
+            'id' => $friendship->id,
             'status' => FriendshipStatusEnum::Accepted,
-            'requested_by' => $sender->id,
         ]);
+    }
+
+    #[Test]
+    public function user_can_delete_friendship_request(): void
+    {
+        $friendship = Friendship::factory()->create();
+
+        Sanctum::actingAs($friendship->requestedBy);
+        $response = $this->deleteJson(route(
+            'friendship.destroy',
+            ['friendship' => $friendship->id]
+        ));
+
+        $response->assertStatus(204);
+    }
+
+    #[Test]
+    public function user_can_reject_friendship_request(): void
+    {
+        $friendship = Friendship::factory()->create();
+        $recipient = $friendship->requested_by == $friendship->user_id_small ? $friendship->userBig : $friendship->userSmall;
+
+        Sanctum::actingAs($recipient);
+        $response = $this->deleteJson(route(
+            'friendship.destroy',
+            ['friendship' => $friendship->id]
+        ));
+
+        $response->assertStatus(204);
+    }
+
+    #[Test]
+    public function user_can_delete_friendship(): void
+    {
+        $friendship = Friendship::factory()->accepted()->create();
+
+        Sanctum::actingAs($friendship->requestedBy);
+        $response = $this->deleteJson(route(
+            'friendship.destroy',
+            ['friendship' => $friendship->id]
+        ));
+
+        $response->assertStatus(204);
     }
 }

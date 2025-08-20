@@ -38,9 +38,11 @@ class FriendshipController extends Controller
         return response()->json(new FriendshipResource($friendship));
     }
 
-    public function destroy()
+    public function destroy(Request $request, Friendship $friendship): JsonResponse
     {
-        //
+        $this->service->destroy($request->user(), $friendship);
+
+        return response()->json(status: 204);
     }
 
     public function block()
