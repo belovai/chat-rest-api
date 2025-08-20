@@ -50,6 +50,7 @@ class Friendship extends Model
         'user_id_big',
         'status',
         'requested_by',
+        'accepted_at',
     ];
 
     #[\Override]

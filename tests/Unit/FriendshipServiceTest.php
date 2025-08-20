@@ -41,4 +41,16 @@ class FriendshipServiceTest extends TestCase
         $this->assertTrue($friendship->exists);
         $this->assertEquals(FriendshipStatusEnum::Pending, $friendship->status);
     }
+
+    #[Test]
+    public function test_user_can_accept_friend_request(): void
+    {
+        $userA = User::factory()->create();
+        $userB = User::factory()->create();
+
+        $friendship = $this->service->request($userA, $userB);
+        $this->service->accept($userB, $friendship);
+
+        $this->assertEquals(FriendshipStatusEnum::Accepted, $friendship->fresh()->status);
+    }
 }

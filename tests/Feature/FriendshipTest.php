@@ -20,7 +20,7 @@ class FriendshipTest extends TestCase
         $recipient = User::factory()->create();
         Sanctum::actingAs($sender);
 
-        $response = $this->postJson("/api/friendships/{$recipient->id}");
+        $response = $this->postJson(route('friendship.store', ['user' => $recipient->id]));
 
         $response->assertStatus(201);
         $response->assertJsonStructure([
@@ -44,7 +44,7 @@ class FriendshipTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $response = $this->postJson("/api/friendships/{$user->id}");
+        $response = $this->postJson(route('friendship.store', ['user' => $user->id]));
 
         $response->assertStatus(403);
 
@@ -61,9 +61,9 @@ class FriendshipTest extends TestCase
         $recipient = User::factory()->create();
         Sanctum::actingAs($sender);
 
-        $this->postJson("/api/friendships/{$recipient->id}");
+        $this->postJson(route('friendship.store', ['user' => $recipient->id]));
 
-        $response = $this->postJson("/api/friendships/{$recipient->id}");
+        $response = $this->postJson(route('friendship.store', ['user' => $recipient->id]));
         $response->assertStatus(409); // Conflict
         $this->assertDatabaseCount('friendships', 1);
     }
@@ -73,8 +73,35 @@ class FriendshipTest extends TestCase
     {
         $recipient = User::factory()->create();
 
-        $response = $this->postJson("/api/friendships/{$recipient->id}");
+        $response = $this->postJson(route('friendship.store', ['user' => $recipient->id]));
 
         $response->assertStatus(401);
+    }
+
+    #[Test]
+    public function user_can_accept_friend_request(): void
+    {
+        $sender = User::factory()->create();
+        $recipient = User::factory()->create();
+        Sanctum::actingAs($sender);
+
+        $response = $this->postJson(route('friendship.store', ['user' => $recipient->id]));
+
+        Sanctum::actingAs($recipient);
+        $response = $this->patchJson(
+            route(
+                'friendship.accept',
+                ['friendship' => $response->json('id')]
+            )
+        );
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('friendships', [
+            'user_id_small' => min($sender->id, $recipient->id),
+            'user_id_big' => max($sender->id, $recipient->id),
+            'status' => FriendshipStatusEnum::Accepted,
+            'requested_by' => $sender->id,
+        ]);
     }
 }

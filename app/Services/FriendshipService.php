@@ -7,6 +7,7 @@ use App\Exceptions\AlreadyFriendsException;
 use App\Exceptions\BlockedException;
 use App\Exceptions\ForbiddenActionException;
 use App\Exceptions\FriendRequestExistsException;
+use App\Exceptions\NotRequesterException;
 use App\Models\Friendship;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -48,11 +49,38 @@ class FriendshipService
         });
     }
 
+    public function accept(User $actor, Friendship $friendship): Friendship
+    {
+        $this->authorizeActorInPair($actor, $friendship);
+
+        if ($friendship->status !== FriendshipStatusEnum::Pending) {
+            throw new ForbiddenActionException('Only pending requests can be accepted.');
+        }
+
+        if ($friendship->requested_by === $actor->id) {
+            throw new NotRequesterException('You cannot accept your own request.');
+        }
+
+        $friendship->update([
+            'status' => FriendshipStatusEnum::Accepted,
+            'accepted_at' => now(),
+        ]);
+
+        return $friendship->refresh();
+    }
+
     /**
      * @return array{int, int}
      */
     private function normalize(int $x, int $y): array
     {
         return $x < $y ? [$x, $y] : [$y, $x];
+    }
+
+    private function authorizeActorInPair(User $actor, Friendship $friendship): void
+    {
+        if ($actor->id !== $friendship->user_id_small && $actor->id !== $friendship->user_id_big) {
+            throw new ForbiddenActionException('Not part of this friendship.');
+        }
     }
 }
