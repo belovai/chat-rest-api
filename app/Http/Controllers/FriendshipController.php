@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Resources\FriendshipResource;
+use App\Models\User;
+use App\Services\FriendshipService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class FriendshipController extends Controller
+{
+    public function __construct(private readonly FriendshipService $service)
+    {
+        //
+    }
+
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function store(Request $request, User $user): JsonResponse
+    {
+        $friendship = $this->service->request($request->user(), $user);
+
+        return response()->json(new FriendshipResource($friendship), 201);
+    }
+
+    public function accept()
+    {
+        //
+    }
+
+    public function destroy()
+    {
+        //
+    }
+
+    public function block()
+    {
+        //
+    }
+}
