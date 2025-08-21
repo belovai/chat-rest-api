@@ -111,4 +111,13 @@ class FriendshipService
             throw new ForbiddenActionException('Not part of this friendship.');
         }
     }
+
+    public function authorizeMessaging(User $actor, Friendship $friendship): void
+    {
+        $this->authorizeActorInPair($actor, $friendship);
+
+        if ($friendship->status !== FriendshipStatusEnum::Accepted) {
+            throw new ForbiddenActionException('Only accepted friends can exchange messages.');
+        }
+    }
 }

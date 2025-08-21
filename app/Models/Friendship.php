@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 /**
  * @property int $id
@@ -19,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $blockedBy
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Message> $messages
+ * @property-read int|null $messages_count
  * @property-read \App\Models\User $requestedBy
  * @property-read \App\Models\User $userBig
  * @property-read \App\Models\User $userSmall
@@ -55,7 +59,7 @@ class Friendship extends Model
         'blocked_by',
     ];
 
-    #[\Override]
+    #[Override]
     public function casts(): array
     {
         return [
@@ -94,6 +98,14 @@ class Friendship extends Model
     public function blockedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'blocked_by');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Message, $this>
+     */
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
     }
 
     /**

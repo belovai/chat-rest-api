@@ -3,6 +3,7 @@
 use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -32,3 +33,10 @@ Route::prefix('/friendships')
         Route::patch('{friendship}/block', [FriendshipController::class, 'block'])
             ->name('friendship.block');
     });
+
+Route::get('/messages/{friendship}', [MessageController::class, 'index'])
+    ->middleware('auth:sanctum')
+    ->name('message.index');
+Route::post('/messages/{friendship}', [MessageController::class, 'store'])
+    ->middleware('auth:sanctum')
+    ->name('message.store');
