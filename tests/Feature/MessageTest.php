@@ -27,7 +27,7 @@ class MessageTest extends TestCase
 
         $response->assertStatus(201);
         $response->assertJsonPath('content', $messageContent);
-        $response->assertJsonPath('sender_id', $friendship->userSmall->id);
+        $response->assertJsonPath('sender.id', $friendship->userSmall->id);
 
         $this->assertDatabaseHas('messages', [
             'friendship_id' => $friendship->id,
@@ -101,9 +101,9 @@ class MessageTest extends TestCase
         );
 
         $response->assertStatus(200);
-        $response->assertJsonCount(2);
-        $response->assertJsonPath('0.content', $message1->content);
-        $response->assertJsonPath('1.content', $message2->content);
+        $response->assertJsonCount(2, 'data');
+        $response->assertJsonPath('data.0.content', $message1->content);
+        $response->assertJsonPath('data.1.content', $message2->content);
     }
 
     #[Test]

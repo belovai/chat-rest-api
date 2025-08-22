@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
+use App\Models\Scopes\VerifiedScope;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
@@ -23,7 +24,7 @@ class RegisterController extends Controller
 
     public function verify(int $id): RedirectResponse
     {
-        $user = User::findOrFail($id);
+        $user = User::withoutGlobalScope(VerifiedScope::class)->findOrFail($id);
         if (! $user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
 

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\FriendshipService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FriendshipController extends Controller
 {
@@ -16,11 +17,14 @@ class FriendshipController extends Controller
         //
     }
 
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $friendships = $this->service->friendships($request->user())->paginate();
+        $friendships = $this->service->friendships($request->user())
+            ->with('userSmall', 'userBig', 'requestedBy', 'blockedBy', 'messages')
+            ->whereIn('status', ['accepted', 'pending'])
+            ->paginate();
 
-        return response()->json(FriendshipResource::collection($friendships));
+        return FriendshipResource::collection($friendships);
     }
 
     /**
@@ -30,14 +34,14 @@ class FriendshipController extends Controller
     {
         $friendship = $this->service->request($request->user(), $user);
 
-        return response()->json(new FriendshipResource($friendship), 201);
+        return (new FriendshipResource($friendship))->response()->setStatusCode(201);
     }
 
-    public function accept(Request $request, Friendship $friendship): JsonResponse
+    public function accept(Request $request, Friendship $friendship): FriendshipResource
     {
         $friendship = $this->service->accept($request->user(), $friendship);
 
-        return response()->json(new FriendshipResource($friendship));
+        return new FriendshipResource($friendship);
     }
 
     public function destroy(Request $request, Friendship $friendship): JsonResponse
@@ -47,10 +51,10 @@ class FriendshipController extends Controller
         return response()->json(status: 204);
     }
 
-    public function block(Request $request, Friendship $friendship): JsonResponse
+    public function block(Request $request, Friendship $friendship): FriendshipResource
     {
         $friendship = $this->service->block($request->user(), $friendship);
 
-        return response()->json(new FriendshipResource($friendship));
+        return new FriendshipResource($friendship);
     }
 }

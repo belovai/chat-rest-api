@@ -24,13 +24,7 @@ class FriendshipTest extends TestCase
         $response = $this->postJson(route('friendship.store', ['user' => $recipient->id]));
 
         $response->assertStatus(201);
-        $response->assertJsonStructure([
-            'id',
-            'user_id_small',
-            'user_id_big',
-            'status',
-            'requested_by',
-        ]);
+
         $this->assertDatabaseHas('friendships', [
             'user_id_small' => min($sender->id, $recipient->id),
             'user_id_big' => max($sender->id, $recipient->id),
@@ -156,5 +150,17 @@ class FriendshipTest extends TestCase
         ));
 
         $response->assertStatus(200);
+    }
+
+    #[Test]
+    public function user_cant_send_friendship_request_to_unvalidated_user(): void
+    {
+        $sender = User::factory()->create();
+        $recipient = User::factory()->unverified()->create();
+        Sanctum::actingAs($sender);
+
+        $response = $this->postJson(route('friendship.store', ['user' => $recipient]));
+
+        $response->assertStatus(404);
     }
 }

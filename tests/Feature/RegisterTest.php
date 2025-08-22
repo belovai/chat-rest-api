@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Scopes\VerifiedScope;
 use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,7 +33,7 @@ class RegisterTest extends TestCase
         $response->assertStatus(201);
         $this->assertDatabaseCount('users', 1);
 
-        $user = User::first();
+        $user = User::withoutGlobalScope(VerifiedScope::class)->first();
         $this->assertNotNull($user);
         $this->assertFalse($user->hasVerifiedEmail());
 

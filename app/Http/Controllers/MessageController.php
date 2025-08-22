@@ -8,6 +8,7 @@ use App\Models\Friendship;
 use App\Services\FriendshipService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class MessageController extends Controller
 {
@@ -16,13 +17,13 @@ class MessageController extends Controller
         //
     }
 
-    public function index(Request $request, Friendship $friendship): JsonResponse
+    public function index(Request $request, Friendship $friendship): AnonymousResourceCollection
     {
         $this->service->authorizeMessaging($request->user(), $friendship);
 
-        $messages = $friendship->messages()->paginate();
+        $messages = $friendship->messages()->with('sender')->paginate();
 
-        return response()->json(MessageResource::collection($messages));
+        return MessageResource::collection($messages);
     }
 
     public function store(MessageRequest $request, Friendship $friendship): JsonResponse

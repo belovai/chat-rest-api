@@ -22,8 +22,8 @@ class LoginTest extends TestCase
         ]);
 
         $response->assertStatus(200);
-        $this->assertNotEmpty($response->json('access_token'));
-        $this->assertEquals('Bearer', $response->json('token_type'));
+        $this->assertNotEmpty($response->json('data.access_token'));
+        $this->assertEquals('Bearer', $response->json('data.token_type'));
     }
 
     #[Test]
