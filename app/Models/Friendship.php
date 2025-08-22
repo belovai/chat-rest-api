@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\FriendshipStatusEnum;
+use App\Policies\FriendshipPolicy;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -45,6 +47,7 @@ use Override;
  *
  * @mixin \Eloquent
  */
+#[UsePolicy(FriendshipPolicy::class)]
 class Friendship extends Model
 {
     /** @use HasFactory<\Database\Factories\FriendshipFactory> */
