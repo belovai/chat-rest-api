@@ -1,0 +1,32 @@
+name: "Security Checks"
+
+on:
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - "main"
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  security-checker:
+    name: "The PHP Security Checker"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Cache"
+        uses: actions/cache@v4
+        id: cache-db
+        with:
+          path: ~/.symfony/cache
+          key: db
+
+      - uses: symfonycorp/security-checker-action@v5
