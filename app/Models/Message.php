@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Friendship $friendship
  * @property-read \App\Models\User $sender
- *
  * @method static \Database\Factories\MessageFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newQuery()
@@ -26,7 +25,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereSenderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 class Message extends Model

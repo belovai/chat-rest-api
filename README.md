@@ -38,11 +38,6 @@ docker-compose exec app bash -c "./vendor/bin/pint"
 docker-compose exec -u www-data app bash -c "./vendor/bin/phpstan analyse"
 ```
 
-### Statikus analízis (Psalm)
-```bash
-docker-compose exec -u www-data app bash -c "./vendor/bin/psalm"
-```
-
 ### Tesztek
 ```bash
 docker-compose exec app bash -c "php artisan test"

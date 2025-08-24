@@ -28,7 +28,6 @@ use Override;
  * @property-read \App\Models\User $requestedBy
  * @property-read \App\Models\User $userBig
  * @property-read \App\Models\User $userSmall
- *
  * @method static \Database\Factories\FriendshipFactory factory($count = null, $state = [])
  * @method static Builder<static>|Friendship forUser(int $userId)
  * @method static Builder<static>|Friendship newModelQuery()
@@ -44,7 +43,6 @@ use Override;
  * @method static Builder<static>|Friendship whereUpdatedAt($value)
  * @method static Builder<static>|Friendship whereUserIdBig($value)
  * @method static Builder<static>|Friendship whereUserIdSmall($value)
- *
  * @mixin \Eloquent
  */
 #[UsePolicy(FriendshipPolicy::class)]
