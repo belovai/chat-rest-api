@@ -1,0 +1,45 @@
+name: Laravel pint
+
+on:
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - "main"
+
+concurrency:
+  group: pint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pint:
+    name: "Run laravel pint"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Install PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: intl, zip, zlib, bcmath, ctype, fileinfo, json, mbstring, openssl, pdo_mysql, pdo_sqlite, tokenizer, xml, imagick
+          coverage: none
+          ini-values: memory_limit=-1
+
+      - name: "Setup Composer Cache"
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: "Run composer install"
+        run: composer install --prefer-dist --no-interaction --no-progress --no-suggest
+
+      - name: Run laravel pint
+        run: ./vendor/bin/pint --test

@@ -1,5 +1,7 @@
 # Chat REST api
 
+[![Tests](https://github.com/belovai/chat-rest-api/actions/workflows/tests.yaml/badge.svg)](https://github.com/belovai/chat-rest-api/actions/workflows/tests.yaml)
+
 > This is a demo project, not for production use.
 
 ## Telepítés
