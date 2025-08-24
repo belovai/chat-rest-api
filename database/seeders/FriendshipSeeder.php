@@ -19,6 +19,7 @@ class FriendshipSeeder extends Seeder
 
         if ($userCount < 5) {
             $this->command->warn('Not enough users found. Please run UserSeeder first.');
+
             return;
         }
 

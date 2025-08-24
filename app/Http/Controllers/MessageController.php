@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Gate;
 
 class MessageController extends Controller
 {
-
     public function index(Request $request, Friendship $friendship): AnonymousResourceCollection
     {
         Gate::authorize('viewMessages', $friendship);

@@ -1,5 +1,7 @@
 # Chat REST api
 
+> This is a demo project, not for production use.
+
 ## Telepítés
 
 ```bash
@@ -23,6 +25,9 @@ Az alkamazás a http://localhost:8080/ címen érhető el, a port módosítható
 
 A regisztráció során küldött email a http://localhost:8025/ címen érhető el a Mailpit-ben. Ennek a portját is lehet módosítani a docker-compose.yaml-ben.
 
+## Használat
+
+Készítettem egy alap Postman collection-t, amivel a funkciók kipróbálhatók: [postman_collection.json](docs/postman_collection.json)
 
 ## Fejlesztés
 

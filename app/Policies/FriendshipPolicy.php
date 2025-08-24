@@ -9,7 +9,6 @@ use Illuminate\Auth\Access\Response;
 
 class FriendshipPolicy
 {
-
     public function viewMessages(User $user, Friendship $friendship): Response
     {
         if ($user->id !== $friendship->user_id_small && $user->id !== $friendship->user_id_big) {
