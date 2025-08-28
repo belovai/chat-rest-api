@@ -10,6 +10,8 @@
 ## pull repository
 git clone git@github.com:belovai/chat-rest-api.git
 
+cd chat-rest-api
+
 ## .env létrehozása
 cp .env.example .env
 
